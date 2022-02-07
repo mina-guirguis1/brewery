@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 @RequestMapping("/api/v1/beer")
@@ -25,7 +26,7 @@ public class BeerController {
     }
 
     @PostMapping
-    public ResponseEntity handlePost(BeerDto beerDto) {
+    public ResponseEntity handlePost(@RequestBody BeerDto beerDto) {
         BeerDto saveDto = beerService.savedNewBeer(beerDto);
 
         HttpHeaders headers = new HttpHeaders();
@@ -36,10 +37,15 @@ public class BeerController {
     }
 
     @PutMapping({"/{beerId}"})
-    public ResponseEntity handleUpdate(@PathVariable("beerId") UUID beerId, BeerDto beerDto) {
+    public ResponseEntity handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
 
         beerService.updateBeer(beerId, beerDto);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping({"/{beerId}"})
+    public void deleteBer(@PathVariable("beerId") UUID beerId) {
+        beerService.deleteById(beerId);
     }
 }
